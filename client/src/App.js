@@ -60,26 +60,26 @@ function App() {
   }, []);
 
   const fetchUsers = async () => {
-    const res = await fetch("http://localhost:5000/api/auth/users");
+    const res = await fetch("https://gk-memory-backend.onrender.com/api/auth/users");
     const data = await res.json();
     setUsers(data || []);
   };
 
   const fetchMemories = async (id) => {
-    const res = await fetch(`http://localhost:5000/api/memory/${id}`);
+    const res = await fetch(`https://gk-memory-backend.onrender.com/api/memory/${id}`);
     const data = await res.json();
     setMemories(data || []);
   };
 
   const fetchGroups = async (id) => {
-    const res = await fetch(`http://localhost:5000/api/groups/${id}`);
+    const res = await fetch(`https://gk-memory-backend.onrender.com/api/groups/${id}`);
     const data = await res.json();
     setGroups(data || []);
   };
 
   const fetchFriends = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/friends/${id}`);
+      const res = await fetch(`https://gk-memory-backend.onrender.com/api/friends/${id}`);
       const data = await res.json();
       
       const processedFriends = (data.friends || []).map(f => 
@@ -102,7 +102,7 @@ function App() {
     if (!email.endsWith("@gmail.com")) {
       return alert("Email must end with @gmail.com");
     }
-    const res = await fetch("http://localhost:5000/api/auth/signup", {
+    const res = await fetch("https://gk-memory-backend.onrender.com/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password })
@@ -113,7 +113,7 @@ function App() {
   };
 
   const handleLogin = async () => {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
+    const res = await fetch("https://gk-memory-backend.onrender.com/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -144,7 +144,7 @@ function App() {
     if (profileAvatar) formData.append("avatar", profileAvatar);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/updateProfile", { method: "POST", body: formData });
+      const res = await fetch("https://gk-memory-backend.onrender.com/api/auth/updateProfile", { method: "POST", body: formData });
       const data = await res.json();
       alert(data.message || "Profile updated!");
       fetchUsers(); // Refresh the overarching users context
@@ -158,7 +158,7 @@ function App() {
   const handleCreateGroupAction = async () => {
     if (!newGroupName.trim()) return alert("Group name is required");
     try {
-      const res = await fetch("http://localhost:5000/api/groups/create", {
+      const res = await fetch("https://gk-memory-backend.onrender.com/api/groups/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -197,7 +197,7 @@ function App() {
 
   const sendFriendRequest = async (toId) => {
     try {
-      const res = await fetch("http://localhost:5000/api/friends/send", {
+      const res = await fetch("https://gk-memory-backend.onrender.com/api/friends/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fromId: userId, toId: toId })
@@ -211,7 +211,7 @@ function App() {
   };
 
   const handleAcceptRequest = async (fromId) => {
-    await fetch("http://localhost:5000/api/friends/accept", {
+    await fetch("https://gk-memory-backend.onrender.com/api/friends/accept", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, fromId })
@@ -220,7 +220,7 @@ function App() {
   };
 
   const handleRejectRequest = async (fromId) => {
-    await fetch("http://localhost:5000/api/friends/reject", {
+    await fetch("https://gk-memory-backend.onrender.com/api/friends/reject", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, fromId })
@@ -237,7 +237,7 @@ function App() {
     formData.append("group", group);
     formData.append("image", image);
     formData.append("taggedUsers", JSON.stringify(selectedUsers));
-    await fetch("http://localhost:5000/api/memory/add", {
+    await fetch("https://gk-memory-backend.onrender.com/api/memory/add", {
       method: "POST",
       body: formData
     });
@@ -250,7 +250,7 @@ function App() {
   };
 
   const handleDelete = async (id) => {
-    await fetch(`http://localhost:5000/api/memory/${id}`, { method: "DELETE" });
+    await fetch(`https://gk-memory-backend.onrender.com/api/memory/${id}`, { method: "DELETE" });
     fetchMemories(userId);
   };
 
@@ -276,7 +276,7 @@ function App() {
   const renderAvatar = (userObj) => {
     if (!userObj) return null;
     if (userObj.avatar) {
-      return <img src={`http://localhost:5000/uploads/${userObj.avatar}`} alt="Avatar" style={{width: 36, height: 36, borderRadius: "50%", objectFit: "cover"}} />;
+      return <img src={`https://gk-memory-backend.onrender.com/uploads/${userObj.avatar}`} alt="Avatar" style={{width: 36, height: 36, borderRadius: "50%", objectFit: "cover"}} />;
     }
     return (
       <div style={{width: 36, height: 36, borderRadius: "50%", background: "#7DA78C", color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "16px"}}>
@@ -537,12 +537,12 @@ function App() {
           <div key={mem._id} className="memory-card">
             <div style={{ position: "relative" }}>
               <img
-                src={`http://localhost:5000/uploads/${mem.image}`}
+                src={`https://gk-memory-backend.onrender.com/uploads/${mem.image}`}
                 alt="memory"
                 className="memory-img"
               />
               <button 
-                onClick={() => handleDownload(`http://localhost:5000/uploads/${mem.image}`, mem.image)}
+                onClick={() => handleDownload(`https://gk-memory-backend.onrender.com/uploads/${mem.image}`, mem.image)}
                 className="btn-download"
                 title="Download Image"
               >
