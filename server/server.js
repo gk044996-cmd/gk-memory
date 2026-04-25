@@ -13,32 +13,19 @@ dotenv.config();
 const app = express();
 
 
-// ================= CORS (FIXED) =================
-
-const allowedOrigins = [
-    "http://localhost:3000",
-    "https://gkmemory.netlify.app"
-];
+// ================= CORS (FINAL WORKING VERSION) =================
 
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-
-        if (allowedOrigins.includes(origin)) {
-            return callback(null, true);
-        } else {
-            return callback(null, false);
-        }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    origin: [
+        "http://localhost:3000",
+        "https://gkmemory.netlify.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
 
-// ✅ FIXED (IMPORTANT for Express 5)
-app.options("/*", cors());
 
-
-// ================= OTHER MIDDLEWARE =================
+// ================= MIDDLEWARE =================
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
