@@ -15,9 +15,23 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 
-// ✅ CORS (supports local + deployed frontend)
+// ✅ CORS (supports local + Netlify + future domains)
+const allowedOrigins = [
+    "http://localhost:3000",
+    "https://gk-memory.netlify.app"
+];
+
 app.use(cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: function (origin, callback) {
+        // allow requests with no origin (mobile apps, postman)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true
 }));
 
@@ -60,8 +74,8 @@ app.get("/", (req, res) => {
 // ================= ERROR HANDLER =================
 
 app.use((err, req, res, next) => {
-    console.error("Server Error:", err);
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("Server Error:", err.message);
+    res.status(500).json({ error: err.message || "Something went wrong" });
 });
 
 
