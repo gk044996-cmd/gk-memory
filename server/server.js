@@ -13,9 +13,8 @@ dotenv.config();
 const app = express();
 
 
-// ================= MIDDLEWARE =================
+// ================= CORS (FIXED) =================
 
-// ✅ CORS (FIXED for Netlify + Local)
 const allowedOrigins = [
     "http://localhost:3000",
     "https://gkmemory.netlify.app"
@@ -23,21 +22,23 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: function (origin, callback) {
-        // allow tools like Postman or same-origin
         if (!origin) return callback(null, true);
 
         if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         } else {
-            return callback(null, false); // ❗ don't throw error
+            return callback(null, false);
         }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
 }));
 
-// ✅ IMPORTANT: handle preflight requests
-app.options("*", cors());
+// ✅ FIXED (IMPORTANT for Express 5)
+app.options("/*", cors());
+
+
+// ================= OTHER MIDDLEWARE =================
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
