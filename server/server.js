@@ -15,25 +15,29 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 
-// ✅ CORS (supports local + Netlify + future domains)
+// ✅ CORS (FIXED for Netlify + Local)
 const allowedOrigins = [
     "http://localhost:3000",
-    "https://gk-memory.netlify.app"
+    "https://gkmemory.netlify.app"
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
-        // allow requests with no origin (mobile apps, postman)
+        // allow tools like Postman or same-origin
         if (!origin) return callback(null, true);
 
         if (allowedOrigins.includes(origin)) {
-            callback(null, true);
+            return callback(null, true);
         } else {
-            callback(new Error("Not allowed by CORS"));
+            return callback(null, false); // ❗ don't throw error
         }
     },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true
 }));
+
+// ✅ IMPORTANT: handle preflight requests
+app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -44,7 +48,6 @@ app.use("/uploads", express.static("uploads"));
 
 // ================= DATABASE =================
 
-// ✅ MongoDB Atlas Connection
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("MongoDB Atlas Connected ✅");
