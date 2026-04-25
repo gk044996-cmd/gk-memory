@@ -15,7 +15,7 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 
-// ✅ CORS (ready for deployment also)
+// ✅ CORS (supports local + deployed frontend)
 app.use(cors({
     origin: process.env.CLIENT_URL || "http://localhost:3000",
     credentials: true
@@ -30,13 +30,16 @@ app.use("/uploads", express.static("uploads"));
 
 // ================= DATABASE =================
 
-// ✅ CONNECT TO MONGODB ATLAS (IMPORTANT FIX)
+// ✅ MongoDB Atlas Connection
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         console.log("MongoDB Atlas Connected ✅");
-        console.log("DB:", mongoose.connection.name); // debug check
+        console.log("DB:", mongoose.connection.name);
     })
-    .catch((err) => console.log("MongoDB Error ❌", err));
+    .catch((err) => {
+        console.error("MongoDB Error ❌", err);
+        process.exit(1);
+    });
 
 
 // ================= ROUTES =================
@@ -67,5 +70,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT} 🚀`);
 });
